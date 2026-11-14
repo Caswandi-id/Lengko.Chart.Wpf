@@ -99,6 +99,9 @@ chart.Series.Add(new LengkoBarSeries("Profit", [| 45.0; 60.0; 75.0; 95.0 |], Col
 grid.Children.Add(chart) |> ignore
 ```
 
+<img width="1882" height="1005" alt="image" src="https://github.com/user-attachments/assets/8d637a8f-2f50-4a25-978e-0c805d94b1da" />
+
+
 ---
 
 ## Featured Chart Types
