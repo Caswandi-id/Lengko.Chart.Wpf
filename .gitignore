@@ -1,0 +1,17 @@
+## Build Outputs
+bin/
+obj/
+artifacts/
+[Bb]in/
+[Oo]bj/
+
+## User & Visual Studio Cache
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## OS Files
+.DS_Store
+Thumbs.db

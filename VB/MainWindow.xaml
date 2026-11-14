@@ -1,0 +1,722 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:chart="clr-namespace:Lengko.Chart.Wpf;assembly=Lengko.Chart.Wpf"
+        Title="Lengko.Chart.Wpf â€” All 32 Charts VB.NET Demo"
+        Height="880" Width="1240" MinHeight="680" MinWidth="980"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        FontFamily="Segoe UI" FontSize="13">
+
+    <Window.Resources>
+        <!-- Dynamic Theme Brushes -->
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F8FAFC" />
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#E2E8F0" />
+        <SolidColorBrush x:Key="CardTitleBrush" Color="#0F172A" />
+        <SolidColorBrush x:Key="CardSubtitleBrush" Color="#64748B" />
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#0F172A" />
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B" />
+        <SolidColorBrush x:Key="TabUnselectedBgBrush" Color="#E2E8F0" />
+        <SolidColorBrush x:Key="TabUnselectedBorderBrush" Color="#CBD5E1" />
+        <SolidColorBrush x:Key="TabForegroundBrush" Color="#475569" />
+
+        <!-- Card Container Style -->
+        <Style x:Key="ChartCard" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Margin" Value="6" />
+        </Style>
+
+        <!-- Action Button Style -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Margin" Value="0,0,8,6" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.88" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.75" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- TabItem Style -->
+        <Style x:Key="DemoTabItem" TargetType="TabItem">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Margin" Value="0,0,4,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{DynamicResource TabForegroundBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="tabBorder" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1,1,1,0" CornerRadius="6,6,0,0"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="tabBorder" Property="Background" Value="#3B82F6" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="tabBorder" Property="Background" Value="{DynamicResource TabUnselectedBgBrush}" />
+                                <Setter TargetName="tabBorder" Property="BorderBrush" Value="{DynamicResource TabUnselectedBorderBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="tabBorder" Property="Opacity" Value="0.9" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="RootGrid" Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock x:Name="TxtTitle" Text="Lengko.Chart.Wpf Showcase (All 32 Charts)" FontSize="21" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+            <TextBlock x:Name="TxtSubtitle" Text="Complete catalog: 32 chart controls with pure WPF DrawingContext vector rendering, tooltips, zoom/pan, and theme engine." FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,3,0,0" />
+        </StackPanel>
+
+        <!-- 2. Toolbar -->
+        <WrapPanel Grid.Row="1" Margin="0,0,0,10">
+            <Button x:Name="BtnTheme" Style="{StaticResource ActionButton}" Content="Theme: Light" Background="#475569" Click="BtnTheme_Click" />
+            <Button x:Name="BtnDonut" Style="{StaticResource ActionButton}" Content="Pie Mode: Standard" Background="#0284C7" Click="BtnDonut_Click" />
+            <Button x:Name="BtnSmooth" Style="{StaticResource ActionButton}" Content="Line Curve: Smooth" Background="#059669" Click="BtnSmooth_Click" />
+            <Button x:Name="BtnRandomize" Style="{StaticResource ActionButton}" Content="Randomize Data" Background="#8B5CF6" Click="BtnRandomize_Click" />
+        </WrapPanel>
+
+        <!-- 3. All 32 Charts in 6 Categorized Tabs -->
+        <TabControl x:Name="MainTabs" Grid.Row="2">
+
+            <!-- Tab 1: Bars & Columns (6 charts) -->
+            <TabItem Header="Bars &amp; Columns (6)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <!-- 1. Bar Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Bar Chart (LengkoBarChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Multi-series grouped column comparison with data values" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoBarChart x:Name="BarChart" Grid.Row="1" Height="250" ShowGrid="True" ShowValues="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 2. Horizontal Bar Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Horizontal Bar Chart (LengkoHorizontalBarChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Ranked category comparison with horizontal bars" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoHorizontalBarChart x:Name="HBarChart" Grid.Row="1" Height="250" ShowValues="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 3. Stacked Bar Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Stacked Bar Chart (LengkoStackedBarChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Part-to-whole segment distribution across periods" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoStackedBarChart x:Name="StackedBarChart" Grid.Row="1" Height="250" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 4. Histogram Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Histogram Chart (LengkoHistogramChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Frequency distribution across numerical range bins" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoHistogramChart x:Name="HistogramChart" Grid.Row="1" Height="250" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 5. Pareto Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Pareto Chart (LengkoParetoChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="80/20 defect / factor analysis with cumulative line" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoParetoChart x:Name="ParetoChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 6. Waterfall Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Waterfall Chart (LengkoWaterfallChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Incremental revenue, expense, and net variance flow" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoWaterfallChart x:Name="WaterfallChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 2: Lines & Areas (6 charts) -->
+            <TabItem Header="Lines &amp; Areas (6)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <!-- 7. Line Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Line Chart (LengkoLineChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Multi-series continuous trends with points and fill" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoLineChart x:Name="LineChart" Grid.Row="1" Height="250" SmoothCurves="True" ShowPoints="True" FillArea="True" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 8. Area Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Area Chart (LengkoAreaChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Cumulative trend volume with smooth area fill" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoAreaChart x:Name="AreaChart" Grid.Row="1" Height="250" SmoothCurves="True" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 9. Stacked Area Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Stacked Area Chart (LengkoStackedAreaChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Cumulative regional contribution over continuous time" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoStackedAreaChart x:Name="StackedAreaChart" Grid.Row="1" Height="250" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 10. Step Line Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Step Line Chart (LengkoStepLineChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Discrete step-wise inventory and threshold changes" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoStepLineChart x:Name="StepLineChart" Grid.Row="1" Height="250" ShowPoints="True" FillArea="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 11. Combo Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Combo Chart (LengkoComboChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Dual-axis combination of volume bars and profit line" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoComboChart x:Name="ComboChart" Grid.Row="1" Height="250" ShowGrid="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 12. Generic Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Generic Chart (LengkoChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Lightweight multi-point metric visualization" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoChart x:Name="GenericChart" Grid.Row="1" Height="250" Title="Multi-Point Metric" />
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 3: Circular & Polar (5 charts) -->
+            <TabItem Header="Circular &amp; Polar (5)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <!-- 13. Pie Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Pie Chart (LengkoPieChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Proportional slice distribution with percentage badges" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoPieChart x:Name="PieChart" Grid.Row="1" Height="250" ShowPercentages="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 14. Donut Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Donut Chart (LengkoDonutChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Ring distribution with central readout and legend" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoDonutChart x:Name="DonutChart" Grid.Row="1" Height="250" ShowPercentages="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 15. Radar Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Radar Chart (LengkoRadarChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Multi-variable capability spider comparison" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoRadarChart x:Name="RadarChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 16. Polar Area Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Polar Area Chart (LengkoPolarAreaChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Cyclic and directional magnitude comparison" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoPolarAreaChart x:Name="PolarChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 17. Sunburst Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Sunburst Chart (LengkoSunburstChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Multi-level concentric radial hierarchy visualizer" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoSunburstChart x:Name="SunburstChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Slot 6: Circular Guide Card -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Circular &amp; Polar Visualizers" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Usage guidelines and best practices" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0">
+                                    <TextBlock Text="â€¢ Pie &amp; Donut: Best for 3â€“7 categorical shares of a whole." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Radar: Excellent for multi-axis skill and capability scoring." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Polar Area: Ideal for cyclical or directional quantities (e.g. wind, quarters)." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Sunburst: Visualizes drill-down proportions in nested rings." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 4: Financial & Timelines (3 charts) -->
+            <TabItem Header="Financial &amp; Timelines (3)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,8,0,0">
+                        <!-- 18. Candlestick Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Candlestick Chart (LengkoCandlestickChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Asset price action with OHLC candles and trading volume bars" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoCandlestickChart x:Name="CandleChart" Grid.Row="1" Height="280" ShowVolume="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 19. OHLC Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="OHLC Bar Chart (LengkoOhlcChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Open-High-Low-Close financial trading price bars" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoOhlcChart x:Name="OhlcChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 20. Gantt Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Gantt Chart (LengkoGanttChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Project timeline, milestone scheduling, and task progress tracking" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoGanttChart x:Name="GanttChart" Grid.Row="1" Height="260" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 5: Hierarchy & Flow (5 charts) -->
+            <TabItem Header="Hierarchy &amp; Flow (5)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <!-- 21. Treemap -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Treemap (LengkoTreemap)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Hierarchical space-filling rectangular proportions" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoTreemap x:Name="TreemapChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 22. Sankey Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Sankey Flow Chart (LengkoSankeyChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Directed flow paths, quantities, and node transfers" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoSankeyChart x:Name="SankeyChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 23. Funnel Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Funnel Chart (LengkoFunnelChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Conversion funnel stages and pipeline drop-off" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoFunnelChart x:Name="FunnelChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 24. Pyramid Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Pyramid Chart (LengkoPyramidChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Hierarchical tiered organizational structure" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoPyramidChart x:Name="PyramidChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 25. Heatmap Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Heatmap Chart (LengkoHeatmapChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="2D intensity matrix grid with color spectrum" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoHeatmapChart x:Name="HeatmapChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Slot 6: Hierarchy Guide Card -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Hierarchy &amp; Flow Visualizers" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Usage guidelines and best practices" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0">
+                                    <TextBlock Text="â€¢ Treemap: Space-efficient nested proportion display." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Sankey: Visualizes energy, cost, and user navigation transfers." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Funnel &amp; Pyramid: Clear stage conversion and hierarchy levels." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                    <TextBlock Text="â€¢ Heatmap: Discovers time-based or matrix correlations quickly." FontSize="12" Foreground="{DynamicResource CardTitleBrush}" Margin="0,4" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 6: KPIs & Statistical (7 charts) -->
+            <TabItem Header="KPIs &amp; Statistical (7)" Style="{StaticResource DemoTabItem}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <UniformGrid Columns="2" Margin="0,8,0,0">
+                        <!-- 26. Radial Gauge -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Radial Gauge (LengkoRadialGauge)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Circular KPI progress arc indicator with centered metrics" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoRadialGauge x:Name="GaugeChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 27. Bullet Graph -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Bullet Graph (LengkoBulletGraph)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Compact KPI against target and qualitative performance bands" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoBulletGraph x:Name="BulletChart" Grid.Row="1" Height="200" VerticalAlignment="Center" Margin="10,0" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 28. Sparkline -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Sparkline (LengkoSparkline)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Ultra-compact micro trend visualizer for dashboards and tables" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="Server Throughput (req/s)" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,0,0,8" HorizontalAlignment="Center" />
+                                    <chart:LengkoSparkline x:Name="SparklineChart" Width="320" Height="100" StrokeWidth="2.5" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- 29. Scatter Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Scatter Chart (LengkoScatterChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Bivariate correlation points with linear regression trendline" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoScatterChart x:Name="ScatterChart" Grid.Row="1" Height="250" ShowTrendline="True" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 30. Bubble Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Bubble Chart (LengkoBubbleChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Three-variable correlation mapping X, Y, and bubble magnitude" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoBubbleChart x:Name="BubbleChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 31. Box Plot Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Box Plot Chart (LengkoBoxPlotChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Five-number summary showing min, quartiles, median, and max" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoBoxPlotChart x:Name="BoxPlotChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 32. Error Bar Chart -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Error Bar Chart (LengkoErrorBarChart)" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Mean values with upper and lower measurement uncertainty" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <chart:LengkoErrorBarChart x:Name="ErrorBarChart" Grid.Row="1" Height="250" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Slot 8: Architecture & KPI Overview Card -->
+                        <Border Style="{StaticResource ChartCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Margin="0,0,0,8">
+                                    <TextBlock Text="Lengko.Chart.Wpf Overview" FontWeight="SemiBold" FontSize="13.5" Foreground="{DynamicResource CardTitleBrush}" />
+                                    <TextBlock Text="Architectural features and control statistics" FontSize="11.5" Foreground="{DynamicResource CardSubtitleBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="10,0">
+                                    <TextBlock Text="â€¢ 32 Total Chart Controls across 6 Domain Categories" FontSize="12.5" Foreground="{DynamicResource CardTitleBrush}" Margin="0,3" />
+                                    <TextBlock Text="â€¢ Pure WPF DrawingContext vector rendering (Zero Skia/GDI)" FontSize="12.5" Foreground="{DynamicResource CardTitleBrush}" Margin="0,3" />
+                                    <TextBlock Text="â€¢ Interactive tooltips, smooth curves, and dynamic zoom/pan" FontSize="12.5" Foreground="{DynamicResource CardTitleBrush}" Margin="0,3" />
+                                    <TextBlock Text="â€¢ Full Light &amp; Dark theme scope with live switching" FontSize="12.5" Foreground="{DynamicResource CardTitleBrush}" Margin="0,3" />
+                                    <TextBlock Text="â€¢ Cross-targeted: .NET 4.7.2 - .NET 10.0-windows" FontSize="12.5" Foreground="{DynamicResource CardTitleBrush}" Margin="0,3" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </UniformGrid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- 4. Footer Tip -->
+        <TextBlock x:Name="TxtTip" Grid.Row="3" Margin="4,10,0,0" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"
+                   Text="ðŸ’¡ Tips: Hover over chart items for interactive tooltips. Scroll wheel over charts to zoom, drag mouse to pan. Click 'Theme' to toggle dark mode." />
+    </Grid>
+</Window>
